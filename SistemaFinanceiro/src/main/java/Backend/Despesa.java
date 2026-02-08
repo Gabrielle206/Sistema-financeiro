@@ -1,0 +1,106 @@
+package Backend;
+
+import java.time.LocalDate;
+
+public class Despesa {
+	
+	private String id;
+	private String usuarioId;
+	private String categoriaId;
+	
+	private String descricao;
+	private double valor;
+	
+	private LocalDate data;
+	private boolean recorrente;
+	private boolean apenasNotificar;
+	
+	private boolean ativa;
+	
+	public Despesa() {
+		this.ativa = true;
+	}
+	
+	public Despesa (String id, String usuarioId, String categoriaId, String descricao, double valor, LocalDate data) {
+		this.id = id;
+		this.usuarioId = usuarioId;
+		this.categoriaId = categoriaId;
+		this.descricao = descricao;
+		this.valor = valor;
+		this.data = data;
+		this.ativa = true;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(String usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+
+	public String getCategoriaId() {
+		return categoriaId;
+	}
+
+	public void setCategoriaId(String categoriaId) {
+		this.categoriaId = categoriaId;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public double getValor() {
+		return valor;
+	}
+
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
+	}
+
+	public boolean isRecorrente() {
+		return recorrente;
+	}
+
+	public void setRecorrente(boolean recorrente) {
+		this.recorrente = recorrente;
+	}
+
+	public boolean isApenasNotificar() {
+		return apenasNotificar;
+	}
+
+	public void setApenasNotificar(boolean apenasNotificar) {
+		this.apenasNotificar = apenasNotificar;
+	}
+
+	public boolean isAtiva() {
+		return ativa;
+	}
+
+	public void setAtiva(boolean ativa) {
+		this.ativa = ativa;
+	}
+	
+}
