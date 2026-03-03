@@ -26,10 +26,10 @@ public class DatabaseManager {
                 + ");";
 
         String sqlCategorias = "CREATE TABLE IF NOT EXISTS Categorias ("
-                + "id TEXT PRIMARY KEY	,"
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "nome TEXT NOT NULL,"
                 + "padrao BOOLEAN NOT NULL,"
-                + "usuario_id TEXT,"
+                + "usuario_id INTEGER NOT NULL,,"
                 + "FOREIGN KEY (usuario_id) REFERENCES Usuarios(id)"
                 + ");";
 
@@ -91,7 +91,7 @@ public class DatabaseManager {
             stmt.execute(sqlHistorico);
             stmt.execute(sqlSeedCategorias);
 
-            System.out.println("Banco de dados financeiro inicializado com sucesso.");
+            System.out.println("Banco de dados inicializado com sucesso.");
 
         } catch (SQLException e) {
             System.out.println("Erro ao inicializar o banco: " + e.getMessage());
