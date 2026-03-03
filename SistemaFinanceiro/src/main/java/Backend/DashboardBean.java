@@ -10,7 +10,7 @@ import java.time.YearMonth;
 
 public class DashboardBean implements Serializable {
 
-    private String usuarioId;
+    private int usuarioId;
     private int mes;
     private int ano;
 
@@ -34,11 +34,11 @@ public class DashboardBean implements Serializable {
         metaAtingida = analiseService.metaAtingida(usuarioId, mes, ano);
     }
 
-    public String getUsuarioId() {
+    public int getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(String usuarioId) {
+    public void setUsuarioId(int usuarioId) {
         this.usuarioId = usuarioId;
     }
 
