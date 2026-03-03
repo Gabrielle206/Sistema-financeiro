@@ -4,9 +4,9 @@ import java.time.LocalDate;
 
 public class Despesa {
 	
-	private String id;
-	private String usuarioId;
-	private String categoriaId;
+	private int id;
+	private int usuarioId;
+	private int categoriaId;
 	
 	private String descricao;
 	private double valor;
@@ -21,7 +21,7 @@ public class Despesa {
 		this.ativa = true;
 	}
 	
-	public Despesa (String id, String usuarioId, String categoriaId, String descricao, double valor, LocalDate data) {
+	public Despesa (int id, int usuarioId, int categoriaId, String descricao, double valor, LocalDate data) {
 		this.id = id;
 		this.usuarioId = usuarioId;
 		this.categoriaId = categoriaId;
@@ -31,27 +31,27 @@ public class Despesa {
 		this.ativa = true;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getUsuarioId() {
+	public int getUsuarioId() {
 		return usuarioId;
 	}
 
-	public void setUsuarioId(String usuarioId) {
+	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
 	}
 
-	public String getCategoriaId() {
+	public int getCategoriaId() {
 		return categoriaId;
 	}
 
-	public void setCategoriaId(String categoriaId) {
+	public void setCategoriaId(int categoriaId) {
 		this.categoriaId = categoriaId;
 	}
 
