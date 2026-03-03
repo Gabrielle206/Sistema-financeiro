@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 
 public class HistoricoDecisao {
 
-	private String id;
+	private int id;
 	private String descricao;
-	private String usuarioId;
+	private int usuarioId;
 	private LocalDateTime data;
 	
 	public HistoricoDecisao () {
 	}
 	
-	public HistoricoDecisao (String id, String descricao, String usuarioId, LocalDateTime data) {
+	public HistoricoDecisao (int id, String descricao, int usuarioId, LocalDateTime data) {
 		
 		this.id = id;
 		this.descricao = descricao;
@@ -20,11 +20,11 @@ public class HistoricoDecisao {
 		this.data = data;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -36,11 +36,11 @@ public class HistoricoDecisao {
 		this.descricao = descricao;
 	}
 
-	public String getUsuarioId() {
+	public int getUsuarioId() {
 		return usuarioId;
 	}
 
-	public void setUsuarioId(String usuarioId) {
+	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
 	}
 
