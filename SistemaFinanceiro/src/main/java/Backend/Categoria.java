@@ -2,34 +2,34 @@ package Backend;
 
 public class Categoria {
 	
-	private String id;
+	private int id;
 	private String nome;
 	private boolean padrao; 
-	private String usuarioId;
+	private int usuarioId;
 	
 	public Categoria() {
 	}
 	
 	// padrao do sistema
-	public Categoria (String id, String nome) {
+	public Categoria (int id, String nome) {
 		this.id = id;
 		this.nome = nome;
 		this.padrao = true;
 	}
 	
 	// criado pelo usuario
-	public Categoria (String id, String nome, String usuarioId) {
+	public Categoria (int id, String nome, int usuarioId) {
 		this.id = id;
 		this.nome = nome;
 		this.usuarioId = usuarioId;
 		this.padrao = false;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -49,11 +49,11 @@ public class Categoria {
 		this.padrao = padrao;
 	}
 
-	public String getUsuarioId() {
+	public int getUsuarioId() {
 		return usuarioId;
 	}
 
-	public void setUsuarioId(String usuarioId) {
+	public void setUsuarioId(int usuarioId) {
 		this.usuarioId = usuarioId;
 	}
 
