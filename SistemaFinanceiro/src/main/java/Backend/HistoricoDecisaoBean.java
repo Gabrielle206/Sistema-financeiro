@@ -16,7 +16,8 @@ public class HistoricoDecisaoBean implements Serializable {
     
     private LoginBean loginBean;
 
-    private HistoricoDecisaoDAO historicoDAO = new HistoricoDecisaoDAO();
+    @Inject
+    private HistoricoDecisaoDAO historicoDAO;
 
     public List<HistoricoDecisao> getHistorico() {
         return historicoDAO.listar(
