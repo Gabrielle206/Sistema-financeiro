@@ -8,20 +8,20 @@ public class AnaliseFinanceiraService {
     private DespesaDAO despesaDAO = new DespesaDAO();
     private MetaDAO metaDAO = new MetaDAO();
 
-    public double calcularSaldo(String usuarioId, int mes, int ano) {
+    public double calcularSaldo(int usuarioId, int mes, int ano) {
         double totalReceitas = receitaDAO.totalMensal(usuarioId, mes, ano);
         double totalDespesas = despesaDAO.totalMensal(usuarioId, mes, ano);
         return totalReceitas - totalDespesas;
     }
 
-    public double calcularSaldoMesAnterior(String usuarioId, int mes, int ano) {
+    public double calcularSaldoMesAnterior(int usuarioId, int mes, int ano) {
         YearMonth atual = YearMonth.of(ano, mes);
         YearMonth anterior = atual.minusMonths(1);
 
         return calcularSaldo(usuarioId, anterior.getMonthValue(), anterior.getYear());
     }
 
-    public double calcularEvolucaoPercentual(String usuarioId, int mes, int ano) {
+    public double calcularEvolucaoPercentual(int usuarioId, int mes, int ano) {
         double saldoAtual = calcularSaldo(usuarioId, mes, ano);
         double saldoAnterior = calcularSaldoMesAnterior(usuarioId, mes, ano);
 
@@ -32,7 +32,7 @@ public class AnaliseFinanceiraService {
         return ((saldoAtual - saldoAnterior) / Math.abs(saldoAnterior)) * 100;
     }
     
-    public String gerarInsightSaldo(String usuarioId, int mes, int ano) {
+    public String gerarInsightSaldo(int usuarioId, int mes, int ano) {
         double percentual = calcularEvolucaoPercentual(usuarioId, mes, ano);
 
         if (percentual > 0) {
@@ -44,7 +44,7 @@ public class AnaliseFinanceiraService {
         }
     }
 
-    public boolean metaAtingida(String usuarioId, int mes, int ano) {
+    public boolean metaAtingida(int usuarioId, int mes, int ano) {
         Meta meta = MetaDAO.buscarMetaDoMes(usuarioId, YearMonth.of(ano, mes));
 
         if (meta == null) {
