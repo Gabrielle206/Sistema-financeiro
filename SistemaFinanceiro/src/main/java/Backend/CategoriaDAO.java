@@ -9,15 +9,14 @@ import java.util.List;
 public class CategoriaDAO {
 
     public boolean salvar(Categoria c) {
-        String sql = "INSERT INTO Categorias (id, nome, padrao, usuario_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Categorias (nome, padrao, usuario_id) VALUES (?, ?, ?)";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, c.getId());
-            stmt.setString(2, c.getNome());
-            stmt.setBoolean(3, c.isPadrao());
-            stmt.setString(4, c.getUsuarioId());
+            stmt.setString(1, c.getNome());
+            stmt.setBoolean(2, c.isPadrao());
+            stmt.setInt(3, c.getUsuarioId());
 
             stmt.executeUpdate();
             return true;
@@ -28,22 +27,22 @@ public class CategoriaDAO {
         }
     }
 
-    public List<Categoria> listarTodas(String usuarioId) {
+    public List<Categoria> listarTodas(int usuarioId) {
         List<Categoria> lista = new ArrayList<>();
         String sql = "SELECT * FROM Categorias WHERE padrao = 1 OR usuario_id = ?";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, usuarioId);
+            stmt.setInt(1, usuarioId);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Categoria c = new Categoria();
-                c.setId(rs.getString("id"));
+                c.setId(rs.getInt("id"));
                 c.setNome(rs.getString("nome"));
                 c.setPadrao(rs.getBoolean("padrao"));
-                c.setUsuarioId(rs.getString("usuario_id"));
+                c.setUsuarioId(rs.getInt("usuario_id"));
                 lista.add(c);
             }
 
@@ -61,7 +60,7 @@ public class CategoriaDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, c.getNome());
-            stmt.setString(2, c.getId());
+            stmt.setInt(2, c.getId());
             stmt.executeUpdate();
             return true;
 
@@ -71,13 +70,14 @@ public class CategoriaDAO {
         }
     }
 
-    public boolean excluir(String id) {
+    public boolean excluir(int id) {
         String sql = "DELETE FROM Categorias WHERE id = ? AND padrao = 0";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, id);
+            stmt.setInt(1, id);
+            
             stmt.executeUpdate();
             return true;
 
@@ -87,14 +87,14 @@ public class CategoriaDAO {
         }
     }
 
-    public boolean existe(String nome, String usuarioId) {
+    public boolean existe(String nome, int usuarioId) {
         String sql = "SELECT 1 FROM Categorias WHERE nome = ? AND (usuario_id = ? OR padrao = 1)";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome);
-            stmt.setString(2, usuarioId);
+            stmt.setInt(2, usuarioId);
             ResultSet rs = stmt.executeQuery();
             return rs.next();
 
