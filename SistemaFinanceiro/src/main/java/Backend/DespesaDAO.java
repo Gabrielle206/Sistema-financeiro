@@ -12,17 +12,17 @@ public class DespesaDAO {
 
 	public boolean salvar (Despesa d) {
 		
-		String sql = "INSERT INTO Despesas (id, valor, data, categoria_id, usuario_id, recorrente) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO Despesas (valor, data, categoria_id, usuario_id, recorrente, descricao) VALUES (?, ?, ?, ?, ?, ?)";
 		
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, d.getId());
-			stmt.setDouble(2, d.getValor());
-			stmt.setDate(3, java.sql.Date.valueOf(d.getData()));
-			stmt.setString(4, d.getCategoriaId());
-			stmt.setString(5, d.getUsuarioId());
-			stmt.setBoolean(6, d.isRecorrente());
+			stmt.setDouble(1, d.getValor());
+			stmt.setDate(2, java.sql.Date.valueOf(d.getData()));
+			stmt.setInt(3, d.getCategoriaId());
+			stmt.setInt(4, d.getUsuarioId());
+			stmt.setBoolean(5, d.isRecorrente());
+			stmt.setString(6, d.getDescricao());
 
 			stmt.executeUpdate();
 			return true;
@@ -33,7 +33,7 @@ public class DespesaDAO {
 			}
 	}
 
-	public List<Despesa> listarMes (String usuarioId, int mes, int ano) {
+	public List<Despesa> listarMes (int usuarioId, int mes, int ano) {
 		
 		List<Despesa> listaMes = new ArrayList<>();
 		
@@ -42,7 +42,7 @@ public class DespesaDAO {
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, usuarioId);
+			stmt.setInt(1, usuarioId);
 			stmt.setString(2, String.format("%02d", mes));
 			stmt.setString(3, String.valueOf(ano));
 			
@@ -50,12 +50,13 @@ public class DespesaDAO {
 
 	        while (rs.next()) {
 	            Despesa d = new Despesa();
-	            d.setId(rs.getString("id"));
+	            d.setId(rs.getInt("id"));
 	            d.setValor(rs.getDouble("valor"));
 	            d.setData(rs.getDate("data").toLocalDate());
-	            d.setCategoriaId(rs.getString("categoria_id"));
-	            d.setUsuarioId(rs.getString("usuario_id"));
+	            d.setCategoriaId(rs.getInt("categoria_id"));
+	            d.setUsuarioId(rs.getInt("usuario_id"));
 	            d.setRecorrente(rs.getBoolean("recorrente"));
+	            d.setDescricao(rs.getString("descricao"));
 
 	            listaMes.add(d);
 	        }
@@ -68,14 +69,14 @@ public class DespesaDAO {
 		return listaMes;
 	}
 	
-	public double totalMensal (String usuarioId, int mes, int ano) {
+	public double totalMensal (int usuarioId, int mes, int ano) {
 		
 		String sql = "SELECT SUM(valor) AS total FROM Despesas WHERE usuario_id = ? AND strftime ('%m', data) = ? AND strftime ('%Y', data) = ?";
 		
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, usuarioId);
+			stmt.setInt(1, usuarioId);
 			stmt.setString(2, String.format("%02d", mes));
 			stmt.setString(3, String.valueOf(ano));
 			
@@ -94,7 +95,7 @@ public class DespesaDAO {
 		return 0.0;
 	}
 	
-	public List<Despesa> listarCategoria (String categoriaId) {
+	public List<Despesa> listarCategoria (int categoriaId) {
 		
 		List<Despesa> listaCategoria = new ArrayList<>();
 		
@@ -103,18 +104,19 @@ public class DespesaDAO {
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, categoriaId);
+			stmt.setInt(1, categoriaId);
 			
 			ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Despesa d = new Despesa();
-                d.setId(rs.getString("id"));
+                d.setId(rs.getInt("id"));
                 d.setValor(rs.getDouble("valor"));
                 d.setData(rs.getDate("data").toLocalDate());
-                d.setCategoriaId(rs.getString("categoria_id"));
-                d.setUsuarioId(rs.getString("usuario_id"));
+                d.setCategoriaId(rs.getInt("categoria_id"));
+                d.setUsuarioId(rs.getInt("usuario_id"));
                 d.setRecorrente(rs.getBoolean("recorrente"));
+                d.setDescricao(rs.getString("descricao"));
 
                 listaCategoria.add(d);
             }
@@ -128,7 +130,7 @@ public class DespesaDAO {
 		return listaCategoria;
 	}
 	
-	public List<Despesa> listarRecorrentes(String usuarioId) {
+	public List<Despesa> listarRecorrentes(int usuarioId) {
 		
 	    List<Despesa> lista = new ArrayList<>();
 
@@ -137,17 +139,18 @@ public class DespesaDAO {
 	    try (Connection conn = DatabaseManager.getConnection();
 	         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-	        stmt.setString(1, usuarioId);
+	        stmt.setInt(1, usuarioId);
 	        ResultSet rs = stmt.executeQuery();
 
 	        while (rs.next()) {
 	            Despesa d = new Despesa();
-	            d.setId(rs.getString("id"));
+	            d.setId(rs.getInt("id"));
 	            d.setValor(rs.getDouble("valor"));
 	            d.setData(rs.getDate("data").toLocalDate());
-	            d.setCategoriaId(rs.getString("categoria_id"));
-	            d.setUsuarioId(rs.getString("usuario_id"));
+	            d.setCategoriaId(rs.getInt("categoria_id"));
+	            d.setUsuarioId(rs.getInt("usuario_id"));
 	            d.setRecorrente(true);
+	            d.setDescricao(rs.getString("descricao"));
 
 	            lista.add(d);
 	        }
@@ -159,13 +162,13 @@ public class DespesaDAO {
 	    return lista;
 	}
 
-	public void gerarRecorrentesProximoMes(String usuarioId, int mes, int ano) {
+	public void gerarRecorrentesProximoMes(int usuarioId, int mes, int ano) {
 		
 	    List<Despesa> recorrentes = listarRecorrentes(usuarioId);
 
 	    for (Despesa d : recorrentes) {
 	        Despesa nova = new Despesa();
-	        nova.setId(UUID.randomUUID().toString());
+	       
 	        nova.setUsuarioId(usuarioId);
 	        nova.setCategoriaId(d.getCategoriaId());
 	        nova.setDescricao(d.getDescricao());
@@ -177,14 +180,14 @@ public class DespesaDAO {
 	    }
 	}
 	
-	public boolean cancelarRecorrencia (String despesaId) {
+	public boolean cancelarRecorrencia (int despesaId) {
 		
 		String sql = "UPDATE Despesas SET recorrente = 0 WHERE id = ?";
 		
 		try (Connection conn = DatabaseManager.getConnection();
 	        PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-	            stmt.setString(1, despesaId);
+	            stmt.setInt(1, despesaId);
 	            stmt.executeUpdate();
 	            return true;
 
@@ -195,14 +198,14 @@ public class DespesaDAO {
 		
 	}
 
-	public boolean arquivarDespesa(String despesaId) {
+	public boolean arquivarDespesa(int despesaId) {
 		
         String sql = "UPDATE Despesas SET ativa = 0 WHERE id = ?";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, despesaId);
+            stmt.setInt(1, despesaId);
             stmt.executeUpdate();
             return true;
 
@@ -212,13 +215,13 @@ public class DespesaDAO {
         }
     }
 	
-	public boolean excluir(String despesaId) {
+	public boolean excluir(int despesaId) {
         String sql = "DELETE FROM Despesas WHERE id = ?";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, despesaId);
+            stmt.setInt(1, despesaId);
             stmt.executeUpdate();
             return true;
 
