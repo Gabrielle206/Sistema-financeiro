@@ -15,7 +15,7 @@ public class ExportacaoService {
     private ReceitaDAO receitaDAO = new ReceitaDAO();
     private DespesaDAO despesaDAO = new DespesaDAO();
 
-    public void exportarRelatorioMensal(String usuarioId, int mes, int ano) {
+    public void exportarRelatorioMensal(int usuarioId, int mes, int ano) {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             HttpServletResponse response =
