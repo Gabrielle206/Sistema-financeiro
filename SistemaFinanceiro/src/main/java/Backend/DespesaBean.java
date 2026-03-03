@@ -17,7 +17,9 @@ public class DespesaBean implements Serializable {
     private LoginBean loginBean;
 
     private Despesa despesa = new Despesa();
-    private DespesaDAO despesaDAO = new DespesaDAO();
+    
+    @Inject
+    private DespesaDAO despesaDAO;
 
     public String salvar() {
         despesa.setUsuarioId(loginBean.getUsuarioLogado().getId());
@@ -25,12 +27,14 @@ public class DespesaBean implements Serializable {
         return "despesas?faces-redirect=true";
     }
 
-    public void excluir(String id) {
+    public void excluir(int id) {
         despesaDAO.excluir(id);
     }
 
     public List<Despesa> getDespesasMes() {
-        return despesaDAO.listarMes(loginBean.getUsuarioLogado().getId(), YearMonth.now());
+    	YearMonth ym = YearMonth.now();
+    	
+        return despesaDAO.listarMes(loginBean.getUsuarioLogado().getId(),  ym.getMonthValue(), ym.getYear());
     }
 
     public Despesa getDespesa() {
