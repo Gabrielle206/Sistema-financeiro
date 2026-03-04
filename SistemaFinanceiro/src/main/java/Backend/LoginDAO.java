@@ -3,7 +3,9 @@ package Backend;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class LoginDAO {
 
     public boolean emailExiste(String email) {
@@ -30,7 +32,7 @@ public class LoginDAO {
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, usuario.getId());
+            stmt.setInt(1, usuario.getId());
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getNomeCompleto());
             stmt.setString(4, usuario.getOcupacao());
@@ -60,7 +62,7 @@ public class LoginDAO {
 
             if (rs.next()) {
                 Usuario u = new Usuario();
-                u.setId(rs.getString("id"));
+                u.setId(rs.getInt("id"));
                 u.setEmail(rs.getString("email"));
                 u.setNomeCompleto(rs.getString("nome_completo"));
                 u.setOcupacao(rs.getString("ocupacao"));

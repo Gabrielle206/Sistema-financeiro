@@ -8,19 +8,19 @@ import java.util.List;
 
 public class UsuarioDAO {
 	
-	public Usuario buscarPorId (String id) {
+	public Usuario buscarPorId (int id) {
 		
 		String sql = "SELECT * FROM Usuarios WHERE id = ?";	
 		
 		try(Connection conn = DatabaseManager.getConnection(); 
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, id);
+			stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             
             if (rs.next()) {
                 Usuario u = new Usuario();
-                u.setId(rs.getString("id"));
+                u.setId(rs.getInt("id"));
                 u.setEmail(rs.getString("email"));
                 u.setNomeCompleto(rs.getString("nome_completo"));
                 u.setOcupacao(rs.getString("ocupacao"));
@@ -40,7 +40,7 @@ public class UsuarioDAO {
 		
 		public void atualizar (Usuario usuario) {
 			
-			String sql = "UPDATE Usuarios SET email = ?, nome_completo = ?, ocupacao = ?, renda_mensal = ?";
+			String sql = "UPDATE Usuarios SET email = ?, nome_completo = ?, ocupacao = ?, renda_mensal = ? WHERE id = ?";
 			
 			try(Connection conn = DatabaseManager.getConnection(); 
 				PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -49,6 +49,7 @@ public class UsuarioDAO {
 				stmt.setString(2, usuario.getNomeCompleto());
 				stmt.setString(3, usuario.getOcupacao());
 				stmt.setDouble(4, usuario.getRendaMensal());
+				stmt.setInt(5, usuario.getId());
 				
 				stmt.executeUpdate();
 				
@@ -59,7 +60,7 @@ public class UsuarioDAO {
 				
 			}
 		
-		public void alterarSenha (String usuarioId, String novaSenha) {
+		public void alterarSenha (int usuarioId, String novaSenha) {
 			
 			String sql = "UPDATE Usuarios SET senha = ? WHERE id = ?";
 			
@@ -67,7 +68,7 @@ public class UsuarioDAO {
 				PreparedStatement stmt = conn.prepareStatement(sql)) {
 				
 				stmt.setString(1, novaSenha);
-				stmt.setString(2, usuarioId);
+				stmt.setInt(2, usuarioId);
 				
 				stmt.executeUpdate();
 			}
@@ -89,7 +90,7 @@ public class UsuarioDAO {
 				
 				while (rs.next()) {
 	                Usuario u = new Usuario();
-	                u.setId(rs.getString("id"));
+	                u.setId(rs.getInt("id"));
 	                u.setEmail(rs.getString("email"));
 	                u.setNomeCompleto(rs.getString("nome_completo"));
 	                u.setOcupacao(rs.getString("ocupacao"));
@@ -106,8 +107,24 @@ public class UsuarioDAO {
 		}
 
 		public void salvar(Usuario usuario) {
-			// TODO Auto-generated method stub
-			
+		    
+			String sql = "INSERT INTO Usuarios (email, nome_completo, ocupacao, renda_mensal, senha, primeiro_login) VALUES (?, ?, ?, ?, ?, ?)";
+		    
+		    try (Connection conn = DatabaseManager.getConnection(); 
+		         PreparedStatement stmt = conn.prepareStatement(sql)) {
+		        
+		        stmt.setString(1, usuario.getEmail());
+		        stmt.setString(2, usuario.getNomeCompleto());
+		        stmt.setString(3, usuario.getOcupacao());
+		        stmt.setDouble(4, usuario.getRendaMensal());
+		        stmt.setString(5, usuario.getSenha());
+		        stmt.setInt(6, usuario.isPrimeiroLogin() ? 1 : 0);
+		        
+		        stmt.executeUpdate();
+		        
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
 		}
 }
 	

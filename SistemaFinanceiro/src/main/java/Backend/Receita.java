@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class Receita {
 
-    private String id;
-    private String usuarioId;
+    private int id;
+    private int usuarioId;
 
     private String descricao;
     private double valor;
@@ -19,7 +19,7 @@ public class Receita {
         this.ativa = true;
     }
 
-    public Receita(String id, String usuarioId, String descricao, double valor, LocalDate data) {
+    public Receita(int id, int usuarioId, String descricao, double valor, LocalDate data) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.descricao = descricao;
@@ -28,19 +28,19 @@ public class Receita {
         this.ativa = true;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
     
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getUsuarioId() {
+    public int getUsuarioId() {
         return usuarioId;
     }
     
-    public void setUsuarioId(String usuarioId) {
+    public void setUsuarioId(int usuarioId) {
         this.usuarioId = usuarioId;
     }
 

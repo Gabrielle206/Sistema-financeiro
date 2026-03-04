@@ -11,17 +11,17 @@ public class ReceitaDAO {
 
 	public boolean salvar (Receita r) {
 		
-		String sql = "INSERT INTO Receitas (id, valor, data, usuario_id) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO Receitas (valor, data, usuario_id) VALUES (?, ?, ?, ?)";
 		
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, r.getId());
+			stmt.setInt(1, r.getId());
 			stmt.setDouble(2, r.getValor());
 			stmt.setDate(3, java.sql.Date.valueOf(r.getData()));
-			stmt.setString(4, r.getUsuarioId());
+			stmt.setInt(4, r.getUsuarioId());
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			return true;
 		}
 		
@@ -31,7 +31,7 @@ public class ReceitaDAO {
 			}
 	}
 	
-	public List<Receita> listaMes (String usuarioId, int mes, int ano) {
+	public List<Receita> listaMes (int usuarioId, int mes, int ano) {
 		
 		List<Receita> listaMes = new ArrayList<>();
 		
@@ -40,7 +40,7 @@ public class ReceitaDAO {
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, usuarioId);
+			stmt.setInt(1, usuarioId);
 			stmt.setString(2, String.format("%02d", mes));
 			stmt.setString(3, String.valueOf(ano));
 			
@@ -48,10 +48,10 @@ public class ReceitaDAO {
 
 	        while (rs.next()) {
 	            Receita r = new Receita();
-	            r.setId(rs.getString("id"));
+	            r.setId(rs.getInt("id"));
 	            r.setValor(rs.getDouble("valor"));
 	            r.setData(rs.getDate("data").toLocalDate());
-	            r.setUsuarioId(rs.getString("usuario_id"));
+	            r.setUsuarioId(rs.getInt("usuario_id"));
 
 	            listaMes.add(r);
 	        }
@@ -65,14 +65,14 @@ public class ReceitaDAO {
 
 	}
 
-	public double totalMensal (String usuarioId, int mes, int ano) {
+	public double totalMensal (int usuarioId, int mes, int ano) {
 		
-		String sql = "SELECT SUM(valor) FROM Receitas WHERE usuario_id = ? AND strftime ('%m', data) = ? AND strftime ('%Y', data) = ?";
+		String sql = "SELECT SUM(valor) AS total FROM Receitas WHERE usuario_id = ? AND strftime ('%m', data) = ? AND strftime ('%Y', data) = ?";
 		
 		try(Connection conn = DatabaseManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(sql)) {
 			
-			stmt.setString(1, usuarioId);
+			stmt.setInt(1, usuarioId);
 			stmt.setString(2, String.format("%02d", mes));
 			stmt.setString(3, String.valueOf(ano));
 			

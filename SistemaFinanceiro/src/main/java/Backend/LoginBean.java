@@ -3,6 +3,7 @@ package Backend;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
+import jakarta.inject.Inject;
 
 @Named
 @SessionScoped
@@ -13,7 +14,8 @@ public class LoginBean implements Serializable {
     private String senha;
     private Usuario usuarioLogado;
 
-    private LoginDAO loginDAO = new LoginDAO();
+    @Inject
+    private LoginDAO loginDAO;
 
     public String login() {
         usuarioLogado = loginDAO.autenticar(email, senha);

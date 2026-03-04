@@ -9,15 +9,15 @@ import java.util.List;
 
 @Named
 @RequestScoped
-
 public class ReceitaBean implements Serializable {
 
     @Inject
-    
     private LoginBean loginBean;
 
+    @Inject
+    private ReceitaDAO receitaDAO;
+
     private Receita receita = new Receita();
-    private ReceitaDAO receitaDAO = new ReceitaDAO();
 
     public String salvar() {
         receita.setUsuarioId(loginBean.getUsuarioLogado().getId());
@@ -26,7 +26,12 @@ public class ReceitaBean implements Serializable {
     }
 
     public List<Receita> getReceitasMes() {
-        return receitaDAO.listaMes(loginBean.getUsuarioLogado().getId(), YearMonth.now());
+        YearMonth ym = YearMonth.now();
+        return receitaDAO.listaMes(
+            loginBean.getUsuarioLogado().getId(),
+            ym.getMonthValue(),
+            ym.getYear()
+        );
     }
 
     public Receita getReceita() {

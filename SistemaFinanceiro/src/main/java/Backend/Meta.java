@@ -4,8 +4,8 @@ import java.time.YearMonth;
 
 public class Meta {
 
-    private String id;
-    private String usuarioId;
+    private int id;
+    private int usuarioId;
 
     private YearMonth mesReferencia;
     private double valorMeta;
@@ -16,7 +16,7 @@ public class Meta {
         this.ativa = true;
     }
 
-    public Meta(String id, String usuarioId, YearMonth mesReferencia, double valorMeta) {
+    public Meta(int id, int usuarioId, YearMonth mesReferencia, double valorMeta) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.mesReferencia = mesReferencia;
@@ -24,19 +24,19 @@ public class Meta {
         this.ativa = true;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
     
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getUsuarioId() {
+    public int getUsuarioId() {
         return usuarioId;
     }
     
-    public void setUsuarioId(String usuarioId) {
+    public void setUsuarioId(int usuarioId) {
         this.usuarioId = usuarioId;
     }
 

@@ -2,7 +2,7 @@ package Backend;
 
 public class Usuario {
 	
-	private String id;
+	private int id;
 	private String email;
 	private String nomeCompleto;
 	private String ocupacao;
@@ -13,16 +13,16 @@ public class Usuario {
 	public Usuario() {
     }
 	
-	public Usuario (String id, String nomeCompleto, String ocupacao) {
+	public Usuario (int id, String nomeCompleto, String ocupacao) {
 		this.id = id;
 		this.nomeCompleto = nomeCompleto;
 		this.ocupacao = ocupacao;
 		this.primeiroLogin = true;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getEmail() {

@@ -12,11 +12,12 @@ import java.time.YearMonth;
 public class MetaBean implements Serializable {
 
     @Inject
-    
     private LoginBean loginBean;
 
     private Meta meta = new Meta();
-    private MetaDAO metaDAO = new MetaDAO();
+    
+    @Inject
+    private MetaDAO metaDAO;
 
     public String salvar() {
         meta.setUsuarioId(loginBean.getUsuarioLogado().getId());
