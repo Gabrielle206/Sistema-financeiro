@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="header_titulo">Histórico e Decisões</ui:define>
+
+    <ui:define name="conteudo">
+        <div class="card-custom p-6">
+            <p:timeline value="#{historicoDecisaoBean.model}" var="evento" style="margin-top: 20px">
+                <h:outputText value="#{evento.descricao}" style="font-weight: bold" />
+                <br/>
+                <h:outputText value="#{evento.dataDecisao}" style="font-size: 0.8rem; color: #666" />
+            </p:timeline>
+            
+            <p:dataTable value="#{historicoDecisaoBean.listaHistorico}" var="h" styleClass="mt-8">
+                <p:column headerText="Data" width="150">#{h.dataDecisao}</p:column>
+                <p:column headerText="Decisão/Evento">#{h.descricao}</p:column>
+                <p:column headerText="Impacto" width="100" textAlign="center">
+                    <p:tag severity="warning" value="Análise" />
+                </p:column>
+            </p:dataTable>
+        </div>
+    </ui:define>
+</ui:composition>

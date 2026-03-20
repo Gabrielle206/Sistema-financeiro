@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="header_titulo">Planejamento e Metas</ui:define>
+
+    <ui:define name="conteudo">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ui:repeat value="#{metaBean.listaMetas}" var="m">
+                <div class="card-custom p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-slate-700">#{m.nome}</h4>
+                        <span class="text-blue-600 font-bold">75%</span>
+                    </div>
+                    <p:progressBar value="75" labelTemplate="{value}%" displayOnly="true" style="height: 10px" />
+                    <p class="text-sm text-slate-500 mt-4 italic">Objetivo: R$ #{m.valorAlvo}</p>
+                </div>
+            </ui:repeat>
+        </div>
+    </ui:define>
+</ui:composition>

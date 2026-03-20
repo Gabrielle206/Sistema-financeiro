@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="jakarta.faces.facelets"
+                template="/WEB-INF/templates/layout.xhtml">
+
+    <ui:define name="titulo">Receitas</ui:define>
+    <ui:define name="header_titulo">Gestão de Entradas</ui:define>
+
+    <ui:define name="conteudo">
+        <h:form id="formReceita">
+            <div class="card-custom p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-slate-700">Minhas Receitas</h3>
+                    <p:commandButton value="Nova Receita" icon="pi pi-plus" 
+                                     oncomplete="PF('dlgReceita').show()" 
+                                     update=":formDialogRec:painelReceita" 
+                                     styleClass="ui-button-success" />
+                </div>
+
+                <p:dataTable id="dtReceitas" value="#{receitaBean.listaReceitas}" var="r" 
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             emptyMessage="Nenhuma receita registada.">
+                    
+                    <p:column headerText="Data">
+                        <h:outputText value="#{r.data}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText>
+                    </p:column>
+                    <p:column headerText="Descrição">#{r.descricao}</p:column>
+                    <p:column headerText="Valor" textAlign="right">
+                        <h:outputText value="#{r.valor}" styleClass="text-emerald-600 font-bold">
+                            <f:convertNumber type="currency" currencySymbol="R$" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Ações" width="120" textAlign="center">
+                        <p:commandButton icon="pi pi-pencil" oncomplete="PF('dlgReceita').show()" 
+                                         update=":formDialogRec:painelReceita" styleClass="ui-button-flat">
+                            <f:setPropertyActionListener value="#{r}" target="#{receitaBean.receita}" />
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash" action="#{receitaBean.excluir}" 
+                                         update="dtReceitas :messages" styleClass="ui-button-flat ui-button-danger">
+                            <f:setPropertyActionListener value="#{r}" target="#{receitaBean.receita}" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </div>
+        </h:form>
+
+        <p:dialog header="Registar Receita" widgetVar="dlgReceita" modal="true" responsive="true">
+            <h:form id="formDialogRec">
+                <p:outputPanel id="painelReceita" class="ui-fluid p-2">
+                    <div class="field mb-4">
+                        <p:outputLabel for="desc" value="Descrição" />
+                        <p:inputText id="desc" value="#{receitaBean.receita.descricao}" required="true" />
+                    </div>
+                    <div class="field mb-4">
+                        <p:outputLabel for="val" value="Valor" />
+                        <p:inputNumber id="val" value="#{receitaBean.receita.valor}" symbol="R$ " required="true" />
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <p:commandButton value="Salvar" action="#{receitaBean.salvar}" 
+                                         update=":formReceita:dtReceitas :messages" 
+                                         oncomplete="PF('dlgReceita').hide()" />
+                    </div>
+                </p:outputPanel>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
