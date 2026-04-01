@@ -1,68 +1,98 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/layout.xhtml">
 
-    <ui:define name="titulo">Despesas</ui:define>
-    <ui:define name="header_titulo">Controle de Despesas</ui:define>
+    <ui:define name="titulo">Despesas | Sistema Financeiro</ui:define>
+    <ui:define name="header_titulo">Gestão de Despesas</ui:define>
 
     <ui:define name="conteudo">
-        <h:form id="formPrincipal">
-            <div class="card-custom p-6">
+        <div class="card-custom p-6">
+            <h:form id="formDespesas">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-slate-700">Histórico de Gastos</h3>
+                    <h3 class="text-lg font-semibold text-gray-700">Minhas Despesas</h3>
                     <p:commandButton value="Nova Despesa" icon="pi pi-plus" 
                                      oncomplete="PF('dlgDespesa').show()" 
-                                     styleClass="ui-button-raised" update=":formDialog:painelDespesa" />
+                                     update=":formDialog:gridDespesa"
+                                     styleClass="ui-button-danger" />
                 </div>
 
-                <p:dataTable id="tabelaDespesas" value="#{despesaBean.listaDespesas}" var="d" 
-                             paginator="true" rows="10" paginatorPosition="bottom">
-                    <p:column headerText="Data">
-                        <h:outputText value="#{d.data}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText>
+                <p:dataTable id="dtDespesas" value="#{despesaBean.listaDespesas}" var="d" 
+                             emptyMessage="Nenhuma despesa encontrada para este mês."
+                             class="w-full">
+                    
+                    <p:column headerText="Data" class="w-32">
+                        <h:outputText value="#{d.data}">
+                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
+                        </h:outputText>
                     </p:column>
-                    <p:column headerText="Descrição">#{d.descricao}</p:column>
-                    <p:column headerText="Categoria">#{d.categoria.nome}</p:column>
-                    <p:column headerText="Valor" textAlign="right">
-                        <h:outputText value="#{d.valor}" styleClass="text-rose-600 font-bold">
+
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{d.descricao}" />
+                    </p:column>
+
+                    <p:column headerText="Categoria">
+                        <h:outputText value="#{d.categoriaNome}" />
+                    </p:column>
+
+                    <p:column headerText="Valor" class="w-40 text-right">
+                        <h:outputText value="#{d.valor}" class="font-bold text-red-600">
                             <f:convertNumber type="currency" currencySymbol="R$" />
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Ações" width="100" textAlign="center">
-                        <p:commandButton icon="pi pi-pencil" oncomplete="PF('dlgDespesa').show()" update=":formDialog:painelDespesa" styleClass="ui-button-flat">
-                            <f:setPropertyActionListener value="#{d}" target="#{despesaBean.despesa}" />
-                        </p:commandButton>
+
+                    <p:column headerText="Ações" class="w-24 text-center">
+                        <p:commandButton icon="pi pi-trash" action="#{despesaBean.excluir(d)}" 
+                                         update="dtDespesas :messages" 
+                                         styleClass="ui-button-danger ui-button-flat" />
                     </p:column>
                 </p:dataTable>
-            </div>
-        </h:form>
+            </h:form>
+        </div>
 
-        <p:dialog header="Detalhes da Despesa" widgetVar="dlgDespesa" modal="true" responsive="true" showEffect="fade">
+        <p:dialog header="Nova Despesa" widgetVar="dlgDespesa" modal="true" responsive="true" width="400">
             <h:form id="formDialog">
-                <p:outputPanel id="painelDespesa" class="ui-fluid p-4">
-                    <div class="space-y-4">
-                        <div class="field">
-                            <p:outputLabel for="desc" value="Descrição" />
-                            <p:inputText id="desc" value="#{despesaBean.despesa.descricao}" required="true" />
-                        </div>
-                        <div class="field">
-                            <p:outputLabel for="val" value="Valor" />
-                            <p:inputNumber id="val" value="#{despesaBean.despesa.valor}" symbol="R$ " decimalSeparator="," thousandSeparator="." />
-                        </div>
-                        <div class="field">
-                            <p:outputLabel for="cat" value="Categoria" />
-                            <p:selectOneMenu id="cat" value="#{despesaBean.despesa.categoriaId}">
-                                <f:selectItems value="#{categoriaDAO.listar()}" var="c" itemLabel="#{c.nome}" itemValue="#{c.id}" />
-                            </p:selectOneMenu>
-                        </div>
+                <h:panelGrid id="gridDespesa" columns="1" class="w-full space-y-4">
+                    <div class="flex flex-col gap-2">
+                        <p:outputLabel for="desc" value="Descrição" />
+                        <p:inputText id="desc" value="#{despesaBean.despesa.descricao}" required="true" class="w-full" />
                     </div>
-                    <div class="mt-6 flex justify-end gap-2">
-                        <p:commandButton value="Salvar" action="#{despesaBean.salvar}" update=":formPrincipal:tabelaDespesas :messages" oncomplete="PF('dlgDespesa').hide()" styleClass="w-32" />
-                        <p:commandButton value="Cancelar" onclick="PF('dlgDespesa').hide()" type="button" styleClass="ui-button-flat w-32" />
+
+                    <div class="flex flex-col gap-2">
+                        <p:outputLabel for="valor" value="Valor" />
+                        <p:inputNumber id="valor" value="#{despesaBean.despesa.valor}" symbol="R$ " required="true" class="w-full" />
                     </div>
-                </p:outputPanel>
+
+                    <div class="flex flex-col gap-2">
+                        <p:outputLabel for="cat" value="Categoria" />
+                        <p:selectOneMenu id="cat" value="#{despesaBean.despesa.categoriaId}" required="true" class="w-full">
+                            <f:selectItem itemLabel="Selecione..." itemValue="" />
+                            <f:selectItems value="#{despesaBean.categorias}" var="c" itemLabel="#{c.nome}" itemValue="#{c.id}" />
+                        </p:selectOneMenu>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <p:outputLabel for="data" value="Data" />
+                        <p:datePicker id="data" value="#{despesaBean.despesa.data}" pattern="dd/MM/yyyy" required="true" class="w-full" />
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <p:selectBooleanCheckbox id="rec" value="#{despesaBean.despesa.recorrente}" />
+                        <p:outputLabel for="rec" value="Despesa Recorrente" />
+                    </div>
+                </h:panelGrid>
+
+                <f:facet name="footer">
+                    <div class="flex justify-end gap-2 mt-4">
+                        <p:commandButton value="Cancelar" onclick="PF('dlgDespesa').hide()" type="button" styleClass="ui-button-secondary ui-button-flat" />
+                        <p:commandButton value="Salvar" action="#{despesaBean.salvar}" 
+                                         update=":formDespesas:dtDespesas :messages" 
+                                         oncomplete="if (!args.validationFailed) PF('dlgDespesa').hide()" 
+                                         styleClass="ui-button-primary" />
+                    </div>
+                </f:facet>
             </h:form>
         </p:dialog>
     </ui:define>

@@ -16,6 +16,7 @@ public class Despesa {
 	private boolean apenasNotificar;
 	
 	private boolean ativa;
+    private String categoriaNome; // Campo para exibição
 	
 	public Despesa() {
 		this.ativa = true;
@@ -102,5 +103,12 @@ public class Despesa {
 	public void setAtiva(boolean ativa) {
 		this.ativa = ativa;
 	}
-	
+
+    public String getCategoriaNome() {
+        return categoriaNome;
+    }
+
+    public void setCategoriaNome(String categoriaNome) {
+        this.categoriaNome = categoriaNome;
+    }
 }

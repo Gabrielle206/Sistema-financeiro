@@ -1,26 +1,38 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="jakarta.faces.html"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/layout.xhtml">
 
-    <ui:define name="header_titulo">Histórico e Decisões</ui:define>
+    <ui:define name="titulo">Histórico | Sistema Financeiro</ui:define>
+    <ui:define name="header_titulo">Histórico de Decisões</ui:define>
 
     <ui:define name="conteudo">
         <div class="card-custom p-6">
-            <p:timeline value="#{historicoDecisaoBean.model}" var="evento" style="margin-top: 20px">
-                <h:outputText value="#{evento.descricao}" style="font-weight: bold" />
-                <br/>
-                <h:outputText value="#{evento.dataDecisao}" style="font-size: 0.8rem; color: #666" />
-            </p:timeline>
-            
-            <p:dataTable value="#{historicoDecisaoBean.listaHistorico}" var="h" styleClass="mt-8">
-                <p:column headerText="Data" width="150">#{h.dataDecisao}</p:column>
-                <p:column headerText="Decisão/Evento">#{h.descricao}</p:column>
-                <p:column headerText="Impacto" width="100" textAlign="center">
-                    <p:tag severity="warning" value="Análise" />
-                </p:column>
-            </p:dataTable>
+            <h:form id="formHistorico">
+                <h3 class="text-lg font-semibold text-gray-700 mb-6">Registro de Atividades</h3>
+
+                <p:dataTable id="dtHistorico" value="#{historicoDecisaoBean.listaHistorico}" var="h" 
+                             emptyMessage="Nenhum registro no histórico."
+                             paginator="true" rows="10" paginatorPosition="bottom"
+                             class="w-full">
+                    
+                    <p:column headerText="Data/Hora" class="w-48">
+                        <h:outputText value="#{h.data}">
+                            <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{h.descricao}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo" class="w-32 text-center">
+                        <p:tag value="Sistema" severity="info" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
         </div>
     </ui:define>
 </ui:composition>

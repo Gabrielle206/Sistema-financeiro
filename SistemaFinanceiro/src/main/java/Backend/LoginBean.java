@@ -7,23 +7,27 @@ import jakarta.inject.Inject;
 
 @Named
 @SessionScoped
-
 public class LoginBean implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String email;
     private String senha;
     private Usuario usuarioLogado;
 
-    @Inject
-    private LoginDAO loginDAO;
+    private LoginDAO loginDAO = new LoginDAO();
 
-    public String login() {
+    public String efetuarLogin() {
         usuarioLogado = loginDAO.autenticar(email, senha);
 
         if (usuarioLogado != null) {
             return "dashboard?faces-redirect=true";
         }
         return "login?error=true";
+    }
+
+    public String login() {
+        return efetuarLogin();
     }
 
     public String logout() {

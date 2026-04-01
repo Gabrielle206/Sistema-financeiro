@@ -53,6 +53,10 @@ public class CategoriaDAO {
         return lista;
     }
 
+    public List<Categoria> listar(int usuarioId) {
+        return listarTodas(usuarioId);
+    }
+
     public boolean atualizar(Categoria c) {
         String sql = "UPDATE Categorias SET nome = ? WHERE id = ?";
 

@@ -1,68 +1,81 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/layout.xhtml">
 
-    <ui:define name="titulo">Receitas</ui:define>
-    <ui:define name="header_titulo">Gestão de Entradas</ui:define>
+    <ui:define name="titulo">Receitas | Sistema Financeiro</ui:define>
+    <ui:define name="header_titulo">Gestão de Receitas</ui:define>
 
     <ui:define name="conteudo">
-        <h:form id="formReceita">
-            <div class="card-custom p-6">
+        <div class="card-custom p-6">
+            <h:form id="formReceitas">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-slate-700">Minhas Receitas</h3>
+                    <h3 class="text-lg font-semibold text-gray-700">Minhas Receitas</h3>
                     <p:commandButton value="Nova Receita" icon="pi pi-plus" 
                                      oncomplete="PF('dlgReceita').show()" 
-                                     update=":formDialogRec:painelReceita" 
+                                     update=":formDialog:gridReceita"
                                      styleClass="ui-button-success" />
                 </div>
 
                 <p:dataTable id="dtReceitas" value="#{receitaBean.listaReceitas}" var="r" 
-                             paginator="true" rows="10" paginatorPosition="bottom"
-                             emptyMessage="Nenhuma receita registada.">
+                             emptyMessage="Nenhuma receita encontrada para este mês."
+                             class="w-full">
                     
-                    <p:column headerText="Data">
-                        <h:outputText value="#{r.data}"><f:convertDateTime pattern="dd/MM/yyyy" /></h:outputText>
+                    <p:column headerText="Data" class="w-32">
+                        <h:outputText value="#{r.data}">
+                            <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
+                        </h:outputText>
                     </p:column>
-                    <p:column headerText="Descrição">#{r.descricao}</p:column>
-                    <p:column headerText="Valor" textAlign="right">
-                        <h:outputText value="#{r.valor}" styleClass="text-emerald-600 font-bold">
+
+                    <p:column headerText="Descrição">
+                        <h:outputText value="#{r.descricao}" />
+                    </p:column>
+
+                    <p:column headerText="Valor" class="w-40 text-right">
+                        <h:outputText value="#{r.valor}" class="font-bold text-green-600">
                             <f:convertNumber type="currency" currencySymbol="R$" />
                         </h:outputText>
                     </p:column>
-                    <p:column headerText="Ações" width="120" textAlign="center">
-                        <p:commandButton icon="pi pi-pencil" oncomplete="PF('dlgReceita').show()" 
-                                         update=":formDialogRec:painelReceita" styleClass="ui-button-flat">
-                            <f:setPropertyActionListener value="#{r}" target="#{receitaBean.receita}" />
-                        </p:commandButton>
-                        <p:commandButton icon="pi pi-trash" action="#{receitaBean.excluir}" 
-                                         update="dtReceitas :messages" styleClass="ui-button-flat ui-button-danger">
-                            <f:setPropertyActionListener value="#{r}" target="#{receitaBean.receita}" />
-                        </p:commandButton>
+
+                    <p:column headerText="Ações" class="w-24 text-center">
+                        <p:commandButton icon="pi pi-trash" action="#{receitaBean.excluir(r)}" 
+                                         update="dtReceitas :messages" 
+                                         styleClass="ui-button-danger ui-button-flat" />
                     </p:column>
                 </p:dataTable>
-            </div>
-        </h:form>
+            </h:form>
+        </div>
 
-        <p:dialog header="Registar Receita" widgetVar="dlgReceita" modal="true" responsive="true">
-            <h:form id="formDialogRec">
-                <p:outputPanel id="painelReceita" class="ui-fluid p-2">
-                    <div class="field mb-4">
+        <p:dialog header="Nova Receita" widgetVar="dlgReceita" modal="true" responsive="true" width="400">
+            <h:form id="formDialog">
+                <h:panelGrid id="gridReceita" columns="1" class="w-full space-y-4">
+                    <div class="flex flex-col gap-2">
                         <p:outputLabel for="desc" value="Descrição" />
-                        <p:inputText id="desc" value="#{receitaBean.receita.descricao}" required="true" />
+                        <p:inputText id="desc" value="#{receitaBean.receita.descricao}" required="true" class="w-full" />
                     </div>
-                    <div class="field mb-4">
-                        <p:outputLabel for="val" value="Valor" />
-                        <p:inputNumber id="val" value="#{receitaBean.receita.valor}" symbol="R$ " required="true" />
+
+                    <div class="flex flex-col gap-2">
+                        <p:outputLabel for="valor" value="Valor" />
+                        <p:inputNumber id="valor" value="#{receitaBean.receita.valor}" symbol="R$ " required="true" class="w-full" />
                     </div>
-                    <div class="mt-4 flex gap-2">
+
+                    <div class="flex flex-col gap-2">
+                        <p:outputLabel for="data" value="Data" />
+                        <p:datePicker id="data" value="#{receitaBean.receita.data}" pattern="dd/MM/yyyy" required="true" class="w-full" />
+                    </div>
+                </h:panelGrid>
+
+                <f:facet name="footer">
+                    <div class="flex justify-end gap-2 mt-4">
+                        <p:commandButton value="Cancelar" onclick="PF('dlgReceita').hide()" type="button" styleClass="ui-button-secondary ui-button-flat" />
                         <p:commandButton value="Salvar" action="#{receitaBean.salvar}" 
-                                         update=":formReceita:dtReceitas :messages" 
-                                         oncomplete="PF('dlgReceita').hide()" />
+                                         update=":formReceitas:dtReceitas :messages" 
+                                         oncomplete="if (!args.validationFailed) PF('dlgReceita').hide()" 
+                                         styleClass="ui-button-primary" />
                     </div>
-                </p:outputPanel>
+                </f:facet>
             </h:form>
         </p:dialog>
     </ui:define>

@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Login | FinancePro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</h:head>
+<h:body class="bg-slate-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-900">FinancePro</h1>
+            <p class="text-slate-500">Gestão financeira</p>
+        </div>
+        <h:form id="loginForm">
+            <p:messages id="msgs" showDetail="false" />
+            <div class="space-y-4">
+                <div class="flex flex-col gap-2">
+                    <p:outputLabel for="email" value="E-mail" />
+                    <p:inputText id="email" value="#{loginBean.email}" required="true" styleClass="w-full" />
+                </div>
+                <div class="flex flex-col gap-2">
+                    <p:outputLabel for="senha" value="Senha" />
+                    <p:password id="senha" value="#{loginBean.senha}" required="true" styleClass="w-full" />
+                </div>
+                <p:commandButton value="Entrar" action="#{loginBean.efetuarLogin}" update="msgs" 
+                                 styleClass="w-full py-2 bg-blue-700 border-none text-white rounded-lg mt-4" />
+            </div>
+        </h:form>
+    </div>
+</h:body>
+</html>

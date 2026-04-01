@@ -9,27 +9,26 @@ import java.util.List;
 
 @Named
 @RequestScoped
-
 public class HistoricoDecisaoBean implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Inject
-    
     private LoginBean loginBean;
 
-    @Inject
-    private HistoricoDecisaoDAO historicoDAO;
+    private HistoricoDecisaoDAO historicoDAO = new HistoricoDecisaoDAO();
+
+    public List<HistoricoDecisao> getListaHistorico() {
+        if (loginBean == null || loginBean.getUsuarioLogado() == null) return null;
+        return historicoDAO.listar(loginBean.getUsuarioLogado().getId());
+    }
 
     public List<HistoricoDecisao> getHistorico() {
-        return historicoDAO.listar(
-            loginBean.getUsuarioLogado().getId()
-        );
+        return getListaHistorico();
     }
 
     public List<HistoricoDecisao> getHistoricoPeriodo(LocalDate inicio, LocalDate fim) {
-        return historicoDAO.listarPeriodo(
-            loginBean.getUsuarioLogado().getId(),
-            inicio,
-            fim
-        );
+        if (loginBean == null || loginBean.getUsuarioLogado() == null) return null;
+        return historicoDAO.listarPeriodo(loginBean.getUsuarioLogado().getId(), inicio, fim);
     }
 }

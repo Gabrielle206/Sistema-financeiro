@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class DatabaseManager {
 
-    private static final String DATABASE_URL = "jdbc:sqlite:C:/meu_projeto/dados/financeiro.db";
+    private static final String DATABASE_URL = "jdbc:sqlite:/home/ubuntu/Sistema-financeiro/financeiro.db";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DATABASE_URL);
@@ -29,7 +29,7 @@ public class DatabaseManager {
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "nome TEXT NOT NULL,"
                 + "padrao BOOLEAN NOT NULL,"
-                + "usuario_id INTEGER NOT NULL,,"
+                + "usuario_id INTEGER,"
                 + "FOREIGN KEY (usuario_id) REFERENCES Usuarios(id)"
                 + ");";
 
@@ -47,6 +47,7 @@ public class DatabaseManager {
 
         String sqlReceitas = "CREATE TABLE IF NOT EXISTS Receitas ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "descricao TEXT,"
                 + "valor REAL NOT NULL,"
                 + "data DATE NOT NULL,"
                 + "usuario_id INTEGER NOT NULL,"

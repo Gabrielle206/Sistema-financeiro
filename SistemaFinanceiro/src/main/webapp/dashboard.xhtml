@@ -1,48 +1,94 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/layout.xhtml">
 
-    <ui:define name="titulo">Dashboard</ui:define>
-    <ui:define name="header_titulo">Visão Geral das Finanças</ui:define>
+    <ui:define name="titulo">Dashboard | Sistema Financeiro</ui:define>
+    <ui:define name="header_titulo">Visão Geral</ui:define>
 
     <ui:define name="conteudo">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="card-custom p-6 border-l-4 border-blue-500">
-                <p class="text-sm font-medium text-slate-500 uppercase">Saldo Disponível</p>
-                <h3 class="text-3xl font-bold text-slate-800">
-                    <h:outputText value="#{dashboardBean.saldoTotal}">
-                        <f:convertNumber type="currency" currencySymbol="R$" />
-                    </h:outputText>
-                </h3>
+            <!-- Card Saldo -->
+            <div class="card-custom p-6 border-l-4 border-indigo-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 uppercase">Saldo Atual</p>
+                        <h3 class="text-2xl font-bold text-gray-800">
+                            <h:outputText value="#{dashboardBean.saldoTotal}">
+                                <f:convertNumber type="currency" currencySymbol="R$" />
+                            </h:outputText>
+                        </h3>
+                    </div>
+                    <div class="bg-indigo-100 p-3 rounded-full text-indigo-600">
+                        <i class="fas fa-wallet fa-2x"></i>
+                    </div>
+                </div>
             </div>
-            <div class="card-custom p-6 border-l-4 border-emerald-500">
-                <p class="text-sm font-medium text-slate-500 uppercase text-emerald-600">Receitas do Mês</p>
-                <h3 class="text-3xl font-bold text-slate-800">R$ 5.250,00</h3>
+
+            <!-- Card Receitas -->
+            <div class="card-custom p-6 border-l-4 border-green-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 uppercase">Receitas do Mês</p>
+                        <h3 class="text-2xl font-bold text-green-600">
+                            <h:outputText value="#{dashboardBean.receitasTotal}">
+                                <f:convertNumber type="currency" currencySymbol="R$" />
+                            </h:outputText>
+                        </h3>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full text-green-600">
+                        <i class="fas fa-arrow-trend-up fa-2x"></i>
+                    </div>
+                </div>
             </div>
-            <div class="card-custom p-6 border-l-4 border-rose-500">
-                <p class="text-sm font-medium text-slate-500 uppercase text-rose-600">Despesas do Mês</p>
-                <h3 class="text-3xl font-bold text-slate-800">R$ 2.140,00</h3>
+
+            <!-- Card Despesas -->
+            <div class="card-custom p-6 border-l-4 border-red-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 uppercase">Despesas do Mês</p>
+                        <h3 class="text-2xl font-bold text-red-600">
+                            <h:outputText value="#{dashboardBean.despesasTotal}">
+                                <f:convertNumber type="currency" currencySymbol="R$" />
+                            </h:outputText>
+                        </h3>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full text-red-600">
+                        <i class="fas fa-arrow-trend-down fa-2x"></i>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Evolução -->
             <div class="card-custom p-6">
-                <h4 class="text-lg font-semibold mb-4 text-slate-700">Fluxo de Caixa</h4>
-                <p:chart type="line" model="#{dashboardBean.graficoFluxo}" style="height:300px" />
+                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-chart-bar text-indigo-500"></i> Análise de Evolução
+                </h4>
+                <div class="flex flex-col items-center justify-center h-48">
+                    <div class="text-4xl font-bold #{dashboardBean.evolucaoPercentual >= 0 ? 'text-green-500' : 'text-red-500'}">
+                        #{dashboardBean.evolucaoPercentual > 0 ? '+' : ''}#{dashboardBean.evolucaoPercentual}%
+                    </div>
+                    <p class="text-gray-500 mt-2">Comparado ao mês anterior</p>
+                </div>
             </div>
+
+            <!-- Metas -->
             <div class="card-custom p-6">
-                <h4 class="text-lg font-semibold mb-4 text-slate-700">Movimentações Recentes</h4>
-                <p:dataTable value="#{despesaBean.listaDespesas}" var="d" rows="5" styleClass="ui-datatable-borderless">
-                    <p:column headerText="Descrição">#{d.descricao}</p:column>
-                    <p:column headerText="Valor" textAlign="right">
-                        <h:outputText value="#{d.valor}" styleClass="font-bold text-rose-500">
-                            <f:convertNumber type="currency" currencySymbol="R$" />
-                        </h:outputText>
-                    </p:column>
-                </p:dataTable>
+                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-bullseye text-yellow-500"></i> Status da Meta
+                </h4>
+                <div class="flex flex-col items-center justify-center h-48">
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="bg-indigo-600 h-4 rounded-full" style="width: #{dashboardBean.metaAtingida ? '100%' : '45%'}"></div>
+                    </div>
+                    <p class="text-gray-700 font-medium">
+                        #{dashboardBean.metaAtingida ? 'Meta mensal atingida! 🎉' : 'Você ainda não atingiu sua meta mensal.'}
+                    </p>
+                </div>
             </div>
         </div>
     </ui:define>

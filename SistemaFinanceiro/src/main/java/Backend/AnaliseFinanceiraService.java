@@ -29,7 +29,8 @@ public class AnaliseFinanceiraService {
             return 0;
         }
 
-        return ((saldoAtual - saldoAnterior) / Math.abs(saldoAnterior)) * 100;
+        double evolucao = ((saldoAtual - saldoAnterior) / Math.abs(saldoAnterior)) * 100;
+        return Math.round(evolucao * 100.0) / 100.0;
     }
     
     public String gerarInsightSaldo(int usuarioId, int mes, int ano) {
@@ -45,7 +46,7 @@ public class AnaliseFinanceiraService {
     }
 
     public boolean metaAtingida(int usuarioId, int mes, int ano) {
-        Meta meta = MetaDAO.buscarMetaDoMes(usuarioId, YearMonth.of(ano, mes));
+        Meta meta = metaDAO.buscarMetaMes(usuarioId, mes, ano);
 
         if (meta == null) {
             return false;
